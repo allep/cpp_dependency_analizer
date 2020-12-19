@@ -6,6 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/allep/cpp_dependency_analyzer/controller"
+	"github.com/allep/cpp_dependency_analyzer/core"
 )
 
 // data types
@@ -110,4 +113,19 @@ func main() {
 	close(cWorkers)
 	waitGroupWorker.Wait()
 	fmt.Println("Main completed")
+
+	// Do some basic include tests and interface tests
+
+	var pController core.IController = new(controller.Controller)
+
+	// test interface methods
+	pathProjList := []core.PathProjectPair{{Path: "percorso", Project: "tipo progetto"}}
+	pController.OnPathProjectList(pathProjList)
+
+	exclFileExts := []string{".md", ".exe"}
+	pController.OnExcludedFileExtList(exclFileExts)
+	pController.OnAbstractReportEnable(true)
+	pController.OnInstabilityReportEnable(false)
+	pController.OnStart()
+	pController.OnStop()
 }

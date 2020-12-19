@@ -1,0 +1,1 @@
+module github.com/allep/cpp_dependency_analyzer/core
