@@ -2,9 +2,17 @@
 // Implements controller related interfaces
 package core
 
+// Structure used to tie together a path and the project it refers to.
 type PathProjectPair struct {
 	Path    string
 	Project string
+}
+
+// The main analysis structure, holding inside it
+type AnalysisReport struct {
+	NumClasses         uint32
+	NumAbstractClasses uint32
+	NumFiles           uint32
 }
 
 type IController interface {
@@ -17,5 +25,9 @@ type IController interface {
 	OnStop() bool
 
 	// Methods toward models
-	// TODO
+	OnAnalysisDone(pReport *AnalysisReport)
+
+	// Observer methods
+	AddViewAsObserver(view IView)
+	AddModelAsObserver(model IModel)
 }

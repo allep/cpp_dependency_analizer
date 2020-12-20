@@ -9,6 +9,8 @@ import (
 
 	"github.com/allep/cpp_dependency_analyzer/controller"
 	"github.com/allep/cpp_dependency_analyzer/core"
+	"github.com/allep/cpp_dependency_analyzer/model"
+	"github.com/allep/cpp_dependency_analyzer/view"
 )
 
 // data types
@@ -116,16 +118,23 @@ func main() {
 
 	// Do some basic include tests and interface tests
 
-	var pController core.IController = new(controller.Controller)
+	var model model.Model
+	var view view.CLIView
+	var controller controller.Controller
 
 	// test interface methods
 	pathProjList := []core.PathProjectPair{{Path: "percorso", Project: "tipo progetto"}}
-	pController.OnPathProjectList(pathProjList)
-
 	exclFileExts := []string{".md", ".exe"}
-	pController.OnExcludedFileExtList(exclFileExts)
-	pController.OnAbstractReportEnable(true)
-	pController.OnInstabilityReportEnable(false)
-	pController.OnStart()
-	pController.OnStop()
+
+	view.AddControllerAsObserver(&controller)
+	controller.AddViewAsObserver(&view)
+	controller.AddModelAsObserver(&model)
+	model.AddControllerAsObserver(&controller)
+
+	view.SetPathProjectPairList(pathProjList)
+	view.SetExcludedFileExtList(exclFileExts)
+	view.SetAbstractReportEnable(true)
+	view.SetInstabilityReportEnable(false)
+	view.Start()
+	view.Stop()
 }
