@@ -1,5 +1,6 @@
-// IController.go
 // Implements controller related interfaces
+// Author: Alessandro Paganelli (alessandro.paganelli@gmail.com)
+
 package core
 
 // Structure used to tie together a path and the project it refers to.

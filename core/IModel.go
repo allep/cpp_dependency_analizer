@@ -1,5 +1,6 @@
-// IModel.go
 // Implements the model related interfaces
+// Author: Alessandro Paganelli (alessandro.paganelli@gmail.com)
+
 package core
 
 type IModel interface {
