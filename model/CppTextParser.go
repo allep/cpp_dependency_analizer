@@ -5,10 +5,16 @@ package model
 
 import (
 	"fmt"
+	"strings"
 )
 
-type CppTextParser struct {
-	aField string
+type GetKeyError struct {}
+
+type CppTextParser struct {}
+
+// Custom error implementation
+func (GetKeyError) Error() string {
+	return "GetKeyError"
 }
 
 // to implement ITextParser interface
@@ -19,9 +25,17 @@ func (*CppTextParser) ParseLine(line string) error {
 }
 
 func (*CppTextParser) GetKeyFromLine(line string) (str string, e error) {
-	// TODO
-	fmt.Println("CppTextParser - GetKeyFromLine called with", line)
+	// Let's trim the string first: this contains both a space and a tab to be trimmed out
+	trimmed := strings.TrimLeft(line, " 	")
+	if len(trimmed) > 0 {
+		tokens := strings.Split(trimmed, " ")
+		if len(tokens) > 0 {
+			str = tokens[0]
+			e = nil
+			return
+		}
+	}
 	str = ""
-	e = nil
+	e = GetKeyError{}
 	return
 }
