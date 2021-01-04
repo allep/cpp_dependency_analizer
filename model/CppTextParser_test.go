@@ -8,12 +8,12 @@ import (
 )
 
 func TestParseLine(t *testing.T) {
-	// TODO: properly think about how to test this. Based on current interface this is not easily 
-	// testable!
+	// TODO: in order to test this we need to test the whole functionality over a sample text
+	// In other words, we should not try to test this against a single line, since if we choose to have
+	// a generic interface we can't properly test it.
 
-	fmt.Println("Testing ParseLine")
-	var p CppTextParser
-	p.ParseLine("Linea di prova")
+	fmt.Println("Testing CppTextParser > ParseLine")
+	// TODO
 }
 
 func TestGetKeyFromLine(t *testing.T) {
