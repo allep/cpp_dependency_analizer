@@ -6,23 +6,43 @@ package model
 import (
 	"fmt"
 	"strings"
+	"errors"
 )
 
-type GetKeyError struct {}
+type CppTextParser struct {
+	includes []string
+	classes []string
+	typedefs []string
+	enums []string
 
-type CppTextParser struct {}
-
-// Custom error implementation
-func (GetKeyError) Error() string {
-	return "GetKeyError"
+	// decoders
+	include_dec CppDecoderInclude
+	class_dec CppDecoderClass
+	typedef_dec CppDecoderTypedef
+	enum_dec CppDecoderEnum
 }
 
 // to implement ITextParser interface
-func (*CppTextParser) ParseLine(line string) error {
-	// TODO
-	fmt.Println("CppTextParser - ParseLine calledi with", line)
+func (p *CppTextParser) ParseLine(line string) error {
+	key, err := p.GetKeyFromLine(line)
+
+	if err == nil {
+		switch key {
+		case "#include":
+			fmt.Println("Include case")
+		case "class":
+			fmt.Println("Class case")
+		case "typedef":
+			fmt.Println("Typedef case")
+		case "enum":
+			fmt.Println("Enum case")
+		default:
+			fmt.Println("Default case")
+		}
+	}
+
 	return nil
-	
+
 	// logic
 	// 1. Get key from line
 	// 2. Based on key push the new decoder on the stack
@@ -52,9 +72,9 @@ func (*CppTextParser) ParseLine(line string) error {
 	*/
 }
 
-func (*CppTextParser) GetKeyFromLine(line string) (str string, e error) {
+func (p *CppTextParser) GetKeyFromLine(line string) (str string, e error) {
 	// Let's trim the string first: this contains both a space and a tab to be trimmed out
-	trimmed := strings.TrimLeft(line, " 	")
+	trimmed := strings.TrimSpace(line)
 	if len(trimmed) > 0 {
 		tokens := strings.Split(trimmed, " ")
 		if len(tokens) > 0 {
@@ -64,6 +84,7 @@ func (*CppTextParser) GetKeyFromLine(line string) (str string, e error) {
 		}
 	}
 	str = ""
-	e = GetKeyError{}
+	e = errors.New("Key error")
 	return
 }
+

@@ -8,12 +8,42 @@ import (
 )
 
 func TestParseLine(t *testing.T) {
-	// TODO: in order to test this we need to test the whole functionality over a sample text
-	// In other words, we should not try to test this against a single line, since if we choose to have
-	// a generic interface we can't properly test it.
-
 	fmt.Println("Testing CppTextParser > ParseLine")
-	// TODO
+	var p CppTextParser
+	input_text := []string {
+		"#include <iostream>",
+		"namespace std;",
+		"void main()",
+		"{",
+		"    int argn;",
+		"    printf(\"Hello world!\");",
+		"}",
+		"",
+		"class foo_c",
+		"{",
+		"    // comment",
+		"    // inner class",
+		"    class inner {",
+		"        void inner_method();",
+		"        uint16_t innerMember;",
+		"    };",
+		"    void method();",
+		"    uint8_t aMember;",
+		"};",
+		"",
+		"enum foo_e {",
+		"    FOO_0,",
+		"    BAR_1,",
+		"};",
+		"",
+		"typedef struct foo_s {",
+		"    uint8_t aField;",
+		"} foo_t;",
+	}
+
+	for _, v := range input_text {
+		p.ParseLine(v)
+	}
 }
 
 func TestGetKeyFromLine(t *testing.T) {
