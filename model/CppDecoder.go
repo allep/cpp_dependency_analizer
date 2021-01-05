@@ -4,11 +4,9 @@
 package model
 
 import (
+	"errors"
 	"strings"
 )
-
-type CppDecoderTokenizerError struct {}
-type CppDecoderDecodeError struct {}
 
 // types used to implement the IDecoder interface for each statement
 type CppDecoderInclude struct {
@@ -36,17 +34,10 @@ func GetTokenFromLine(line string, index int) (string, error) {
 			}
 		}
 	}
-	err := &CppDecoderTokenizerError {}
+	err := errors.New("Tokenization error")
 	return "", err
 }
 
-func (*CppDecoderTokenizerError) Error() string {
-	return "Tokenizer Error"
-}
-
-func (*CppDecoderDecodeError) Error() string {
-	return "CppDecoder decode error"
-}
 
 // methods
 
@@ -70,7 +61,7 @@ func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 		}
 	}
 	// failure
-	ret_err := &CppDecoderDecodeError{}
+	ret_err := errors.New("Decode error")
 	return true, ret_err
 }
 
