@@ -4,7 +4,6 @@
 package model
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -23,27 +22,29 @@ type CppDecoderSingleLineComment struct {}
 type CppDecoderMultiLineComment struct {}
 
 // functions
+
+// Index is zero-based
 func GetTokenFromLine(line string, index int) (string, error) {
-	trimmed := strings.TrimLeft(line, "		")
+	trimmed := strings.TrimSpace(line)
 	if len(trimmed) > 0 {
 		tokens := strings.Split(trimmed, " ")
 		if len(tokens) > 0 {
 			// now let's try to get the correct index out of the line
-			if index >= len(tokens) {
+			if ((index >= 0) && (index < len(tokens))) {
 				token := tokens[index]
 				return token, nil
 			}
 		}
 	}
-	err := CppDecoderTokenizerError {}
+	err := &CppDecoderTokenizerError {}
 	return "", err
 }
 
-func (CppDecoderTokenizerError) Error() string {
+func (*CppDecoderTokenizerError) Error() string {
 	return "Tokenizer Error"
 }
 
-func (CppDecoderDecodeError) Error() string {
+func (*CppDecoderDecodeError) Error() string {
 	return "CppDecoder decode error"
 }
 
@@ -57,7 +58,6 @@ func (c *CppDecoderInclude) PushBack(symbol string) {
 // inside "line"
 func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 	token, err := GetTokenFromLine(line, 1) // zero based
-	fmt.Println("Got token:", token)
 	if err == nil {
 		// properly sanitize it
 		sanitized := strings.TrimLeft(token, " <\"")
@@ -69,6 +69,11 @@ func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 			return true, nil
 		}
 	}
-	ret_err := CppDecoderDecodeError{}
+	// failure
+	ret_err := &CppDecoderDecodeError{}
 	return true, ret_err
+}
+
+func (c *CppDecoderInclude) GetSymbols() ([]string) {
+	return c.symbols
 }
