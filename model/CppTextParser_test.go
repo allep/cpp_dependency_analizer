@@ -31,6 +31,10 @@ func TestParseLine(t *testing.T) {
 		"    uint8_t aMember;",
 		"};",
 		"",
+		"// #include <commented_include.h>",
+		"#include \"../embedded_include.h\"",
+		"// A double include",
+		"#include <iostream>",
 		"enum foo_e {",
 		"    FOO_0,",
 		"    BAR_1,",
@@ -39,10 +43,24 @@ func TestParseLine(t *testing.T) {
 		"typedef struct foo_s {",
 		"    uint8_t aField;",
 		"} foo_t;",
+		"// A useless include at the end of the file",
+		"  #include \"../../useless_include.h\"",
 	}
 
 	for _, v := range input_text {
 		p.ParseLine(v)
+	}
+
+	// now let's get all symbols decoded from file
+	includes := p.GetIncludes()
+
+	// make sure we have decoded the correct number of includes
+	if len(includes) != 3 {
+		t.Error("Number of includes not matching with expected.")
+	}
+
+	for _, i := range includes {
+		fmt.Println("Found include:", i)
 	}
 }
 

@@ -10,11 +10,6 @@ import (
 )
 
 type CppTextParser struct {
-	includes []string
-	classes []string
-	typedefs []string
-	enums []string
-
 	// decoders
 	include_dec CppDecoderInclude
 	class_dec CppDecoderClass
@@ -22,22 +17,29 @@ type CppTextParser struct {
 	enum_dec CppDecoderEnum
 }
 
+func (p *CppTextParser) GetIncludes() []string {
+	return p.include_dec.GetSymbols()
+}
+
 // to implement ITextParser interface
 func (p *CppTextParser) ParseLine(line string) error {
 	key, err := p.GetKeyFromLine(line)
-
 	if err == nil {
 		switch key {
 		case "#include":
 			fmt.Println("Include case")
+			_, err := p.include_dec.DecodeLine(line)
+			if err != nil {
+				fmt.Println("Failed while decoding include line. Err:", err)
+			}
 		case "class":
-			fmt.Println("Class case")
+			fmt.Println("Class case TODO")
 		case "typedef":
-			fmt.Println("Typedef case")
+			fmt.Println("Typedef case TODO")
 		case "enum":
-			fmt.Println("Enum case")
+			fmt.Println("Enum case TODO")
 		default:
-			fmt.Println("Default case")
+			fmt.Println("Default case TODO")
 		}
 	}
 

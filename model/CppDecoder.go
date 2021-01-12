@@ -42,6 +42,13 @@ func GetTokenFromLine(line string, index int) (string, error) {
 // methods
 
 func (c *CppDecoderInclude) PushBack(symbol string) {
+	// do not allow for duplicates
+	for _, val := range c.symbols {
+		if val == symbol {
+			return
+		}
+	}
+	// not found, let's append it
 	c.symbols = append(c.symbols, symbol)
 }
 
@@ -50,8 +57,11 @@ func (c *CppDecoderInclude) PushBack(symbol string) {
 func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 	token, err := GetTokenFromLine(line, 1) // zero based
 	if err == nil {
-		// properly sanitize it
-		sanitized := strings.TrimLeft(token, " <\"")
+		// properly sanitize it, by removing:
+		// - parenthesis
+		// - double quotes
+		// - relative paths
+		sanitized := strings.TrimLeft(token, " <\"./")
 		sanitized = strings.TrimRight(sanitized, " >\"")
 
 		if len(sanitized) > 0 {
@@ -65,6 +75,6 @@ func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 	return true, ret_err
 }
 
-func (c *CppDecoderInclude) GetSymbols() ([]string) {
+func (c *CppDecoderInclude) GetSymbols() []string {
 	return c.symbols
 }
