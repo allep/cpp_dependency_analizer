@@ -1,4 +1,4 @@
-// Implements the Cpp decoder logic
+// Implements the Cpp decoder logic for includes
 // Author: Alessandro Paganelli (alessandro.paganelli@gmail.com)
 
 package model
@@ -12,12 +12,6 @@ import (
 type CppDecoderInclude struct {
 	symbols []string
 }
-
-type CppDecoderTypedef struct {}
-type CppDecoderEnum struct {}
-type CppDecoderClass struct {}
-type CppDecoderSingleLineComment struct {}
-type CppDecoderMultiLineComment struct {}
 
 // functions
 
@@ -40,6 +34,10 @@ func GetTokenFromLine(line string, index int) (string, error) {
 
 
 // methods
+
+func (c *CppDecoderInclude) GetSymbols() []string {
+	return c.symbols
+}
 
 func (c *CppDecoderInclude) PushBack(symbol string) {
 	// do not allow for duplicates
@@ -75,6 +73,3 @@ func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 	return true, ret_err
 }
 
-func (c *CppDecoderInclude) GetSymbols() []string {
-	return c.symbols
-}
