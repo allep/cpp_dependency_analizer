@@ -3,5 +3,18 @@
 
 package model
 
+import (
+	"errors"
+)
+
 type CppDecoderEnum struct {}
+
+func (d *CppDecoderEnum) DecodeLine(line string) (bool, error) {
+	// TODO
+	return true, errors.New("CppDecoderEnum DecodeLine error")
+}
+
+func (d *CppDecoderEnum) GetDecoderDescription() string {
+	return "CppDecoderEnum"
+}
 

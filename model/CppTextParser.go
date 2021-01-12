@@ -23,6 +23,13 @@ func (p *CppTextParser) GetIncludes() []string {
 
 // to implement ITextParser interface
 func (p *CppTextParser) ParseLine(line string) error {
+	// 2021/01/12 logic
+	// 1. Get key:
+	//		- if key is recognized, a new decoder should be pushed on the stack
+	//		- if no key is recognized, use last decoder
+	// 2. Use last decoder to parse current line
+	// 3. If ParseLine returns true, then we need to pop out the decoder
+
 	key, err := p.GetKeyFromLine(line)
 	if err == nil {
 		switch key {

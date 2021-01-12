@@ -73,3 +73,7 @@ func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 	return true, ret_err
 }
 
+func (c *CppDecoderInclude) GetDecoderDescription() string {
+	return "CppDecoderInclude"
+}
+
