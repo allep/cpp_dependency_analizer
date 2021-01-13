@@ -4,50 +4,55 @@
 package model
 
 import (
-	"errors"
 	"fmt"
+	"errors"
 	"strings"
 )
 
 type CppTextParser struct {
-	// decoders
-	include_dec CppDecoderInclude
-	class_dec   CppDecoderClass
-	typedef_dec CppDecoderTypedef
-	enum_dec    CppDecoderEnum
+	// FIXME: this is just to test new developments
+	symbols []string
+
+	// The decoders' FSM
+	fsm CppDecoderFSM
 }
 
 func (p *CppTextParser) GetIncludes() []string {
-	return p.include_dec.GetSymbols()
+	return p.symbols
 }
 
 // to implement ITextParser interface
 func (p *CppTextParser) ParseLine(line string) error {
-	// 2021/01/12 logic
-	// 1. Get key:
-	//		- if key is recognized, a new decoder should be pushed on the stack
-	//		- if no key is recognized, use last decoder
-	// 2. Use last decoder to parse current line
-	// 3. If ParseLine returns true, then we need to pop out the decoder
+	// Step 1: try to get a key from current line and evolve internal state machine accordingly.
+	key, k_err := p.GetKeyFromLine(line)
+	if k_err == nil {
+		p.fsm.Update(key)
+	}
 
-	key, err := p.GetKeyFromLine(line)
-	if err == nil {
-		switch key {
-		case "#include":
-			fmt.Println("Include case")
-			_, err := p.include_dec.DecodeLine(line)
-			if err != nil {
-				fmt.Println("Failed while decoding include line. Err:", err)
-			}
-		case "class":
-			fmt.Println("Class case TODO")
-		case "typedef":
-			fmt.Println("Typedef case TODO")
-		case "enum":
-			fmt.Println("Enum case TODO")
-		default:
-			fmt.Println("Default case TODO")
+	// Step 2: use current state to perform current line decoding.
+	var state_pop bool
+	var dec_err error
+	cur_dec, s_err := p.fsm.GetCurrentState()
+	if s_err == nil {
+		state_pop, dec_err = (*cur_dec).DecodeLine(line)
+		if dec_err != nil {
+			fmt.Println("CppTextParser: error while decoding line: ", line)
 		}
+	}
+	// Step 3: if we need to pop current decoder, then collect symbols first, then actually pop it.
+	if state_pop {
+		// TODO
+		// This needs to be done transparently. The decoder knows what symbol it produces, so 
+		// we can leave the decoder to properly update them, e.g.:
+		// cur_dec.Flush()
+
+		// FIXME: this is just a temporary workaround
+		cur_state_symbols := (*cur_dec).GetSymbols()
+		for _, v := range cur_state_symbols {
+			// TODO FIXME: also in case of workaround here we need to avoid duplications
+			p.symbols = append(p.symbols, v)
+		}
+		p.fsm.Pop()
 	}
 
 	return nil

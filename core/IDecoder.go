@@ -6,4 +6,5 @@ package core
 type IDecoder interface {
 	DecodeLine(line string) (bool, error)
 	GetDecoderDescription() string
+	GetSymbols() []string
 }

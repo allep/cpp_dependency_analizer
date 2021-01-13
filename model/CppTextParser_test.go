@@ -55,8 +55,9 @@ func TestParseLine(t *testing.T) {
 	includes := p.GetIncludes()
 
 	// make sure we have decoded the correct number of includes
-	if len(includes) != 3 {
-		t.Error("Number of includes not matching with expected.")
+	num_includes := len(includes)
+	if num_includes != 3 {
+		t.Errorf("Number of includes [%d] does not matching with expected.", num_includes)
 	}
 
 	for _, i := range includes {

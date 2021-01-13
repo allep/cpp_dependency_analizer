@@ -7,7 +7,9 @@ import (
 	"errors"
 )
 
-type CppDecoderEnum struct{}
+type CppDecoderEnum struct {
+	symbols []string
+}
 
 func (d *CppDecoderEnum) DecodeLine(line string) (bool, error) {
 	// TODO
@@ -16,4 +18,8 @@ func (d *CppDecoderEnum) DecodeLine(line string) (bool, error) {
 
 func (d *CppDecoderEnum) GetDecoderDescription() string {
 	return "CppDecoderEnum"
+}
+
+func (d *CppDecoderEnum) GetSymbols() []string {
+	return d.symbols
 }

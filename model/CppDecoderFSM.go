@@ -53,6 +53,13 @@ func (f *CppDecoderFSM) StackSize() int {
 	return len(f.decoder_stack)
 }
 
+func (f *CppDecoderFSM) GetCurrentState() (*core.IDecoder, error) {
+	if len(f.decoder_stack) == 0 {
+		return nil, errors.New("Empty stack")
+	}
+	return &f.decoder_stack[len(f.decoder_stack)-1], nil
+}
+
 func (f *CppDecoderFSM) GetCurrentStateDescription() (description string, err error) {
 	if len(f.decoder_stack) == 0 {
 		return "", errors.New("Empty stack")

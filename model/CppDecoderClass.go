@@ -7,7 +7,9 @@ import (
 	"errors"
 )
 
-type CppDecoderClass struct{}
+type CppDecoderClass struct {
+	symbols []string
+}
 
 func (d *CppDecoderClass) DecodeLine(line string) (bool, error) {
 	// TODO
@@ -16,4 +18,8 @@ func (d *CppDecoderClass) DecodeLine(line string) (bool, error) {
 
 func (d *CppDecoderClass) GetDecoderDescription() string {
 	return "CppDecoderClass"
+}
+
+func (d *CppDecoderClass) GetSymbols() []string {
+	return d.symbols
 }

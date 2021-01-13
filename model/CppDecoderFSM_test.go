@@ -16,17 +16,18 @@ func TestCppDecoderFSMUpdate(t *testing.T) {
 	var test_cases = []struct {
 		key                   string
 		expected_state_change bool
+		expected_actual_state bool
 		expected_decoder_desc string
 		expected_stack_size   int
 	}{
-		{"invalid", false, "", 0},
-		{"#include", true, "CppDecoderInclude", 1},
-		{"class", true, "CppDecoderClass", 2},
-		{"class", true, "CppDecoderClass", 3}, // simulate an inner class
-		{"typedef", true, "CppDecoderTypedef", 4},
-		{"invalid", false, "CppDecoderTypedef", 4}, // simulate an invalid state in the between
-		{"enum", true, "CppDecoderEnum", 5},
-		{"enum", true, "CppDecoderEnum", 6}, // simulate a kind of impossible enum inside another enum
+		{"invalid", false, false, "", 0},
+		{"#include", true, true, "CppDecoderInclude", 1},
+		{"class", true, true, "CppDecoderClass", 2},
+		{"class", true, true, "CppDecoderClass", 3}, // simulate an inner class
+		{"typedef", true, true, "CppDecoderTypedef", 4},
+		{"invalid", false, true, "CppDecoderTypedef", 4}, // simulate an invalid state in the between
+		{"enum", true, true, "CppDecoderEnum", 5},
+		{"enum", true, true, "CppDecoderEnum", 6}, // simulate a kind of impossible enum inside another enum
 	}
 	fsm := new(CppDecoderFSM)
 
@@ -37,6 +38,16 @@ func TestCppDecoderFSMUpdate(t *testing.T) {
 			t.Error("FSM state change mismatch.")
 		} else {
 			fmt.Println("FSM state changed correctly.")
+		}
+		p_cur, s_err := fsm.GetCurrentState()
+		if val.expected_actual_state {
+			// since we expect an actual state, we can check if current state pointer is nil or not
+			if s_err != nil {
+				t.Error("FSM state error: cannot get current state.")
+			}
+			if p_cur == nil {
+				t.Error("FSM state error: current state is nil.")
+			}
 		}
 		desc, _ := fsm.GetCurrentStateDescription()
 		if desc != val.expected_decoder_desc {
