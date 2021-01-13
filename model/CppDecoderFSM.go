@@ -60,6 +60,3 @@ func (f *CppDecoderFSM) GetCurrentStateDescription() (description string, err er
 	return f.decoder_stack[len(f.decoder_stack)-1].GetDecoderDescription(), nil
 }
 
-// TODO
-// 1. Add Pop() test
-// 2. More comprehensive testing of state changes.
