@@ -23,7 +23,7 @@ func TestCppDecoderFSMUpdate(t *testing.T) {
 		{"enum", true, "CppDecoderEnum", 4},
 	}
 	fsm := new(CppDecoderFSM)
-	
+
 	for _, val := range test_cases {
 		changed := fsm.Update(val.key)
 		if changed != val.expected_state_change {
