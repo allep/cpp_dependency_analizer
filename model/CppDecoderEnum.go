@@ -1,4 +1,4 @@
-// Implements the Cpp decoder logic for enums 
+// Implements the Cpp decoder logic for enums
 // Author: Alessandro Paganelli (alessandro.paganelli@gmail.com)
 
 package model
@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-type CppDecoderEnum struct {}
+type CppDecoderEnum struct{}
 
 func (d *CppDecoderEnum) DecodeLine(line string) (bool, error) {
 	// TODO
@@ -17,4 +17,3 @@ func (d *CppDecoderEnum) DecodeLine(line string) (bool, error) {
 func (d *CppDecoderEnum) GetDecoderDescription() string {
 	return "CppDecoderEnum"
 }
-

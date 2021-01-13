@@ -22,7 +22,7 @@ func GetTokenFromLine(line string, index int) (string, error) {
 		tokens := strings.Split(trimmed, " ")
 		if len(tokens) > 0 {
 			// now let's try to get the correct index out of the line
-			if ((index >= 0) && (index < len(tokens))) {
+			if (index >= 0) && (index < len(tokens)) {
 				token := tokens[index]
 				return token, nil
 			}
@@ -31,7 +31,6 @@ func GetTokenFromLine(line string, index int) (string, error) {
 	err := errors.New("Tokenization error")
 	return "", err
 }
-
 
 // methods
 
@@ -76,4 +75,3 @@ func (c *CppDecoderInclude) DecodeLine(line string) (bool, error) {
 func (c *CppDecoderInclude) GetDecoderDescription() string {
 	return "CppDecoderInclude"
 }
-

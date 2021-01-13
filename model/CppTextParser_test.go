@@ -10,7 +10,7 @@ import (
 func TestParseLine(t *testing.T) {
 	fmt.Println("Testing CppTextParser > ParseLine")
 	var p CppTextParser
-	input_text := []string {
+	input_text := []string{
 		"#include <iostream>",
 		"namespace std;",
 		"void main()",
@@ -69,8 +69,8 @@ func TestGetKeyFromLine(t *testing.T) {
 	var p CppTextParser
 	var tests = []struct {
 		test_name string
-		line_in string
-		key_out string
+		line_in   string
+		key_out   string
 	}{
 		{"Include test 1", "#include <iostream>", "#include"},
 		{"Include test 2", "  #include <iostream>", "#include"},

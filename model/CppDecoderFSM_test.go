@@ -14,10 +14,10 @@ import (
 // - At the end of the test Pop() all decoders, one by one.
 func TestCppDecoderFSMUpdate(t *testing.T) {
 	var test_cases = []struct {
-		key string
+		key                   string
 		expected_state_change bool
 		expected_decoder_desc string
-		expected_stack_size int
+		expected_stack_size   int
 	}{
 		{"invalid", false, "", 0},
 		{"#include", true, "CppDecoderInclude", 1},
@@ -68,7 +68,7 @@ func TestCppDecoderFSMUpdate(t *testing.T) {
 		cur_stack_size := fsm.StackSize()
 		if expected_stack_size != cur_stack_size {
 			t.Errorf("FSM Pop error: stack size [%d] different from that expected [%d].", cur_stack_size,
-					expected_stack_size)
+				expected_stack_size)
 		}
 	}
 	// Now no more decoder should be present on the stack. Let's verify this.

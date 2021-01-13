@@ -4,8 +4,8 @@
 package model
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"github.com/allep/cpp_dependency_analyzer/core"
 )
 
@@ -18,20 +18,20 @@ type CppDecoderFSM struct {
 func (f *CppDecoderFSM) Update(key string) (state_changed bool) {
 	var p core.IDecoder
 	switch key {
-		case "#include":
-			fmt.Println("Include case")
-			p = new(CppDecoderInclude)
-		case "class":
-			fmt.Println("Class case")
-			p = new(CppDecoderClass)
-		case "typedef":
-			fmt.Println("Typedef case")
-			p = new(CppDecoderTypedef)
-		case "enum":
-			fmt.Println("Enum case")
-			p = new(CppDecoderEnum)
-		default:
-			fmt.Println("Default case")
+	case "#include":
+		fmt.Println("Include case")
+		p = new(CppDecoderInclude)
+	case "class":
+		fmt.Println("Class case")
+		p = new(CppDecoderClass)
+	case "typedef":
+		fmt.Println("Typedef case")
+		p = new(CppDecoderTypedef)
+	case "enum":
+		fmt.Println("Enum case")
+		p = new(CppDecoderEnum)
+	default:
+		fmt.Println("Default case")
 	}
 	if p != nil {
 		f.decoder_stack = append(f.decoder_stack, p)
@@ -45,7 +45,7 @@ func (f *CppDecoderFSM) Pop() (bool, error) {
 		return false, errors.New("Pop error")
 	}
 
-	f.decoder_stack = f.decoder_stack[:len(f.decoder_stack) - 1]
+	f.decoder_stack = f.decoder_stack[:len(f.decoder_stack)-1]
 	return true, nil
 }
 
@@ -57,7 +57,7 @@ func (f *CppDecoderFSM) GetCurrentStateDescription() (description string, err er
 	if len(f.decoder_stack) == 0 {
 		return "", errors.New("Empty stack")
 	}
-	return f.decoder_stack[len(f.decoder_stack) - 1].GetDecoderDescription(), nil
+	return f.decoder_stack[len(f.decoder_stack)-1].GetDecoderDescription(), nil
 }
 
 // TODO

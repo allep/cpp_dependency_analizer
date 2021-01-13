@@ -1,4 +1,4 @@
-// Implements the Cpp decoder logic for classes 
+// Implements the Cpp decoder logic for classes
 // Author: Alessandro Paganelli (alessandro.paganelli@gmail.com)
 
 package model
@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-type CppDecoderClass struct {}
+type CppDecoderClass struct{}
 
 func (d *CppDecoderClass) DecodeLine(line string) (bool, error) {
 	// TODO
@@ -17,4 +17,3 @@ func (d *CppDecoderClass) DecodeLine(line string) (bool, error) {
 func (d *CppDecoderClass) GetDecoderDescription() string {
 	return "CppDecoderClass"
 }
-
