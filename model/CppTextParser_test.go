@@ -47,6 +47,8 @@ func TestParseLine(t *testing.T) {
 		"  #include \"../../useless_include.h\"",
 	}
 
+	p.Init()
+
 	for _, v := range input_text {
 		p.ParseLine(v)
 	}
@@ -94,6 +96,8 @@ func TestGetKeyFromLine(t *testing.T) {
 		{"Line comment test 3", "	// this is a comment", "//"},
 		{"Line comment test 4", "	 // this is a comment", "//"},
 	}
+
+	p.Init()
 
 	for _, tt := range tests {
 		t.Run(tt.test_name, func(t *testing.T) {

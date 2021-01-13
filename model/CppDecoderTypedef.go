@@ -8,6 +8,7 @@ import (
 )
 
 type CppDecoderTypedef struct {
+	typedef_observer TypedefObserver
 	symbols []string
 }
 
@@ -23,3 +24,16 @@ func (d *CppDecoderTypedef) GetDecoderDescription() string {
 func (d *CppDecoderTypedef) GetSymbols() []string {
 	return d.symbols
 }
+
+func (d *CppDecoderTypedef) Flush() error {
+	if d.typedef_observer == nil {
+		return errors.New("Invalid typedef observer")
+	}
+	d.typedef_observer.UpdateTypedefList(d.symbols)
+	return nil
+}
+
+func (d *CppDecoderTypedef) SetTypedefObserver(obs TypedefObserver) {
+	d.typedef_observer = obs
+}
+

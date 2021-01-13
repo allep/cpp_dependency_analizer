@@ -10,15 +10,18 @@ import (
 )
 
 type CppTextParser struct {
-	// FIXME: this is just to test new developments
-	symbols []string
+	include_list []string
 
 	// The decoders' FSM
 	fsm CppDecoderFSM
 }
 
+func (p *CppTextParser) Init() {
+	p.fsm.SetObserver(p)
+}
+
 func (p *CppTextParser) GetIncludes() []string {
-	return p.symbols
+	return p.include_list
 }
 
 // to implement ITextParser interface
@@ -47,42 +50,14 @@ func (p *CppTextParser) ParseLine(line string) error {
 		// cur_dec.Flush()
 
 		// FIXME: this is just a temporary workaround
-		cur_state_symbols := (*cur_dec).GetSymbols()
-		for _, v := range cur_state_symbols {
-			// TODO FIXME: also in case of workaround here we need to avoid duplications
-			p.symbols = append(p.symbols, v)
+		f_err := (*cur_dec).Flush()
+		if f_err != nil {
+			fmt.Println("Flush error:", f_err)
 		}
 		p.fsm.Pop()
 	}
 
 	return nil
-
-	// logic
-	// 1. Get key from line
-	// 2. Based on key push the new decoder on the stack
-	// 3. Based on the parse result of the decoder, decide if the decoder needs to be
-	//    popped or not.
-
-	/*
-		Better description
-		- I shouldn't resort on some external logic to get the key etc
-		- Once I get inside this, I should:
-			1. Take the current top decoder
-			2. Pass the present line to it
-			3. Return
-		- It' the decoder who is responsible to;
-			- From current line get the key
-			- Based on the key decide if a new decoder has to be put onto the stack
-			- Based on current line decide if the current decoder has to be popped out of the stack
-
-		- What do I need then?
-			1. CppTextParser should have a DecoderStack
-			2. Every time we parse a line we should consider the decoder on top of the stack and call ParseLine
-			   on it
-			3. The decoder's parse line output should let us understand if the decoder has to be popped out of
-			   the stack
-
-	*/
 }
 
 func (p *CppTextParser) GetKeyFromLine(line string) (str string, e error) {
@@ -100,3 +75,37 @@ func (p *CppTextParser) GetKeyFromLine(line string) (str string, e error) {
 	e = errors.New("Key error")
 	return
 }
+
+// observer methods
+
+func (p *CppTextParser) UpdateIncludeList(list []string) {
+	fmt.Println("CppTextParser: UpdateIncludeList")
+	for _, v := range list {
+		var found bool = false
+		for _, w := range p.include_list {
+			if v == w {
+				found = true;
+				break
+			}
+		}
+		if !found {
+			p.include_list = append(p.include_list, v)
+		}
+	}
+}
+
+func (p *CppTextParser) UpdateTypedefList(list []string) {
+	fmt.Println("CppTextParser: UpdateTypedefList")
+	// TODO
+}
+
+func (p *CppTextParser) UpdateEnumList(list []string) {
+	fmt.Println("CppTextParser: UpdateEnumList")
+	// TODO
+}
+
+func (p *CppTextParser) UpdateClassList(list []string) {
+	fmt.Println("CppTextParser: UpdateClassList")
+	// TODO
+}
+

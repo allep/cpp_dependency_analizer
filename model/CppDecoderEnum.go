@@ -8,6 +8,7 @@ import (
 )
 
 type CppDecoderEnum struct {
+	enum_observer EnumObserver
 	symbols []string
 }
 
@@ -23,3 +24,16 @@ func (d *CppDecoderEnum) GetDecoderDescription() string {
 func (d *CppDecoderEnum) GetSymbols() []string {
 	return d.symbols
 }
+
+func (d *CppDecoderEnum) Flush() error {
+	if d.enum_observer == nil {
+		return errors.New("Invalid enum observer")
+	}
+	d.enum_observer.UpdateEnumList(d.symbols)
+	return nil
+}
+
+func (d *CppDecoderEnum) SetEnumObserver(obs EnumObserver) {
+	d.enum_observer = obs
+}
+

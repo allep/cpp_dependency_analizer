@@ -10,26 +10,39 @@ import (
 )
 
 type CppDecoderFSM struct {
+	parser *CppTextParser
 	decoder_stack []core.IDecoder
 }
 
 // methods
+
+func (f *CppDecoderFSM) SetObserver(obs *CppTextParser) {
+	f.parser = obs
+}
 
 func (f *CppDecoderFSM) Update(key string) (state_changed bool) {
 	var p core.IDecoder
 	switch key {
 	case "#include":
 		fmt.Println("Include case")
-		p = new(CppDecoderInclude)
+		pi := new(CppDecoderInclude)
+		pi.SetIncludeObserver(f.parser)
+		p = pi
 	case "class":
 		fmt.Println("Class case")
-		p = new(CppDecoderClass)
+		pc := new(CppDecoderClass)
+		pc.SetClassObserver(f.parser)
+		p = pc
 	case "typedef":
 		fmt.Println("Typedef case")
-		p = new(CppDecoderTypedef)
+		pt := new(CppDecoderTypedef)
+		pt.SetTypedefObserver(f.parser)
+		p = pt
 	case "enum":
 		fmt.Println("Enum case")
-		p = new(CppDecoderEnum)
+		pe := new(CppDecoderEnum)
+		pe.SetEnumObserver(f.parser)
+		p = pe
 	default:
 		fmt.Println("Default case")
 	}

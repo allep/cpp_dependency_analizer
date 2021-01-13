@@ -10,6 +10,7 @@ import (
 
 // types used to implement the IDecoder interface for each statement
 type CppDecoderInclude struct {
+	include_observer IncludeObserver
 	symbols []string
 }
 
@@ -36,6 +37,19 @@ func GetTokenFromLine(line string, index int) (string, error) {
 
 func (c *CppDecoderInclude) GetSymbols() []string {
 	return c.symbols
+}
+
+func (c *CppDecoderInclude) Flush() error {
+	if c.include_observer == nil {
+		return errors.New("Invalid include observer")
+	}
+
+	c.include_observer.UpdateIncludeList(c.symbols)
+	return nil
+}
+
+func (c *CppDecoderInclude) SetIncludeObserver(obs IncludeObserver) {
+	c.include_observer = obs
 }
 
 func (c *CppDecoderInclude) PushBack(symbol string) {
